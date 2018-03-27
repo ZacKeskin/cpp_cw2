@@ -65,6 +65,10 @@ GetVectorOfSeriesIndexPairs(const unsigned int& numberOfThreads,
 //-----------------------------------------------------------------------------
 void FillSeries(unsigned long int* const values, unsigned long int const& numberOfValues)
 {
+  for(unsigned long int i=0;i<numberOfValues;i++)
+  {
+    values[i] = i+1;
+  }
 }
 
 

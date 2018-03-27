@@ -15,8 +15,15 @@
 #include "catch.hpp"
 #include "ccmpiCatchMain.h"
 #include "ccmpiMyFunctions.h"
+using namespace std;
 
 TEST_CASE( "2. FillSeries Test", "[CW2]" ) {
+	unsigned long int *test_array = new unsigned long int[10]();
+	ccmpi::FillSeries(test_array,10);
+	REQUIRE( test_array[0] == 1 );
+	REQUIRE( test_array[1] == 2 );
+	REQUIRE( test_array[9] == 10 );
+	//REQUIRE_THROWS_AS( ccmpi::FillSeries(test_array,20), std::logic_error);
 }
 
 TEST_CASE( "2. SumSeries Test", "[CW2]" ) {
