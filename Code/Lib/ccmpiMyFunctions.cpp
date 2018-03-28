@@ -91,11 +91,12 @@ double EvaluateGregoryLeibnizSeries(unsigned long int startingTermNumber,
                                    )
 {
   double sum = 0;
-  int *odd_even = new int[2]();
+  double *odd_even = new double[2](); /*Using ints here limits precision, 
+  and using pow(-1,n) will give worse precision for large n */
   odd_even[0] = -1;
   odd_even[1] = 1;
 
-  for (unsigned long i = startingTermNumber; i = finishingTermNumber; i++)
+  for (unsigned long i = startingTermNumber; i <=finishingTermNumber; i++)
   {
     double n = i*2 - 1;
     double term = odd_even[i%2] * (1/n);

@@ -23,7 +23,7 @@ TEST_CASE( "2. FillSeries Test", "[CW2]" ) {
 	REQUIRE( test_array[0] == 1 );
 	REQUIRE( test_array[1] == 2 );
 	REQUIRE( test_array[9] == 10 );
-	//REQUIRE_THROWS_AS( ccmpi::FillSeries(test_array,20), std::logic_error);
+	//REQUIRE_THROWS_AS(test_array[20], std::logic_error);
 }
 
 TEST_CASE( "2. SumSeries Test", "[CW2]" ) {
@@ -37,8 +37,10 @@ TEST_CASE( "2. SumSeries Test", "[CW2]" ) {
 }
 
 TEST_CASE( "3. EvaluateGregoryLeibnizSeries Test", "[CW2]" ) {
-	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 1) == Approx(1));
-	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 2) == Approx(2/3));
-	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 3) == Approx(2/3 + 1/5));
-
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 1) == Approx(1).epsilon(0.0001));
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 2) == Approx(0.66666667).epsilon(0.0001));
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 3) == Approx(0.86666667).epsilon(0.0001));
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(2, 5) == Approx(-0.165079365).epsilon(0.0001));
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(5, 5) == Approx(0.11111111).epsilon(0.0001));
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(10, 20) == Approx(-0.04018532).epsilon(0.0001));
 }
