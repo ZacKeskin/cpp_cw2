@@ -90,7 +90,18 @@ double EvaluateGregoryLeibnizSeries(unsigned long int startingTermNumber,
                                     unsigned long int finishingTermNumber
                                    )
 {
-  return 0.0;
+  double sum = 0;
+  int *odd_even = new int[2]();
+  odd_even[0] = -1;
+  odd_even[1] = 1;
+
+  for (unsigned long i = startingTermNumber; i = finishingTermNumber; i++)
+  {
+    double n = i*2 - 1;
+    double term = odd_even[i%2] * (1/n);
+    sum += term;
+  }
+  return sum;
 }
 
 

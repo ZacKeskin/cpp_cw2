@@ -37,4 +37,8 @@ TEST_CASE( "2. SumSeries Test", "[CW2]" ) {
 }
 
 TEST_CASE( "3. EvaluateGregoryLeibnizSeries Test", "[CW2]" ) {
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 1) == Approx(1));
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 2) == Approx(2/3));
+	REQUIRE(ccmpi::EvaluateGregoryLeibnizSeries(1, 3) == Approx(2/3 + 1/5));
+
 }
