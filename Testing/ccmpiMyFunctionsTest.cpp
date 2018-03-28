@@ -27,6 +27,13 @@ TEST_CASE( "2. FillSeries Test", "[CW2]" ) {
 }
 
 TEST_CASE( "2. SumSeries Test", "[CW2]" ) {
+	// Define empty long int array
+	unsigned long int *test_array = new unsigned long int[10]();
+	// Populate array using FillSeries
+	ccmpi::FillSeries(test_array,10);
+	REQUIRE(ccmpi::SumSeries(test_array,1) == 1);
+	REQUIRE(ccmpi::SumSeries(test_array,3) == 6);
+	REQUIRE(ccmpi::SumSeries(test_array,10) == 55);
 }
 
 TEST_CASE( "3. EvaluateGregoryLeibnizSeries Test", "[CW2]" ) {

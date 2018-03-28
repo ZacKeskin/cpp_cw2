@@ -76,7 +76,12 @@ void FillSeries(unsigned long int* const values, unsigned long int const& number
 unsigned long int SumSeries(const unsigned long int* const values,
                             unsigned long int const & numberOfValues)
 {
-  return 0;
+  unsigned long int sum = 0;
+  for(int i=0;i<numberOfValues;i++)
+  {
+    sum += values[i];
+  }
+  return sum;
 }
 
 

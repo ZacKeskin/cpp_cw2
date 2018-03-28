@@ -20,3 +20,6 @@
 # CLion/IntelliJ
 *cmake-build-debug
 .idea/*
+
+# Build files
+build/*
