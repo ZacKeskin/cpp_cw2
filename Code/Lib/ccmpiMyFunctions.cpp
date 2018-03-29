@@ -109,7 +109,24 @@ double EvaluateGregoryLeibnizSeries(unsigned long int startingTermNumber,
 //-----------------------------------------------------------------------------
 double EvaluatePiUsingOpenMP(unsigned long int numberElements)
 {
-  return 0.0;
+
+  // Use OpenMP to find number of threads and initialise vector to apportion series
+  unsigned int numThreads = omp_get_max_threads();
+  std::vector<std::pair<unsigned long int, unsigned long int> >  // we have 2 cpu cores available on the VM
+  vector = GetVectorOfSeriesIndexPairs(numThreads,numberElements);
+
+  
+  // Split vector into chunks and reduce sum across threads 
+  double sum = 0;
+
+  #pragma omp parallel reduction(+:sum)
+    {
+      unsigned long int this_thread_num = omp_get_thread_num();
+      sum = EvaluateGregoryLeibnizSeries(vector[this_thread_num].first,vector[this_thread_num].second);
+    }
+
+  // Leibniz formula returns pi/4
+  return 4*sum;
 }
 
 } // end namespace
