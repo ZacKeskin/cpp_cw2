@@ -17,4 +17,5 @@
 #include "ccmpiMyFunctions.h"
 
 TEST_CASE( "4. OpenMP Pi Test", "[CW2]" ) {
+	REQUIRE(ccmpi::EvaluatePiUsingOpenMP(500000000) == Approx(3.1415926535));
 }
