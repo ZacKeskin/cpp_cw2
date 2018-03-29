@@ -72,8 +72,11 @@ TEST_CASE( "6. MPI Triangle Number Test", "[CW2]" ) {
     /////////////////////////////////////////////////////////////////////////////
 
     // 1. Fill originalArray with 1...n  (implemented in Q1)
+    ccmpi::FillSeries(originalArray, numberOfElements);
     // 2. Check the sum of the series.   (implemented in Q1)
-
+    unsigned long int sum = ccmpi::SumSeries(originalArray, numberOfElements);
+    std::cout << "sum: " << sum << std::endl;
+    REQUIRE(sum == 0.5*(numberOfElements * (numberOfElements + 1)));
     /////////////////////////////////////////////////////////////////////////////
     // End of your code
     /////////////////////////////////////////////////////////////////////////////
@@ -86,15 +89,23 @@ TEST_CASE( "6. MPI Triangle Number Test", "[CW2]" ) {
   /////////////////////////////////////////////////////////////////////////////
 
   // 1. Send a block of data (subsetOfArray) to all nodes (including root) in the MPI world.
+    
+    
+    MPI_Bcast((void*) subsetOfArray, 500, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
   // 2. Sum the local array subsetOfArray
+    unsigned long int local_sum = ccmpi::SumSeries(subsetOfArray, numberOfElements);
+    std::cout << "Thread: " << rank << " has local sum = " << local_sum << std::endl;
   // 3. Send all these local sums back to root, and sum on root.
+    MPI_Reduce(&local_sum, &sumBySummingEachSum,1, MPI_UNSIGNED_LONG, MPI_SUM, 0,MPI_COMM_WORLD);
   // 4. Copy blocks of memory from subsetOfArray on each node into repopulatedArray.
+    std::cout << "Total Sum = " << sumBySummingEachSum << std::endl;
   // 5. On root node only, check the totals
   //    in:
   //        sumBySummingEachSum
   //        sumBySummingReturnedMemory
   //    equal:expectedTotal
-  //
+  //  
+    //REQUIRE(sumBySummingEachSum == sum);
 
   /////////////////////////////////////////////////////////////////////////////
   // End of your code
