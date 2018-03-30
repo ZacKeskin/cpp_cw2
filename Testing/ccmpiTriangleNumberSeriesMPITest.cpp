@@ -76,7 +76,7 @@ TEST_CASE( "6. MPI Triangle Number Test", "[CW2]" ) {
     // 2. Check the sum of the series.   (implemented in Q1)
     unsigned long int sum = ccmpi::SumSeries(originalArray, numberOfElements);
     std::cout << "sum: " << sum << std::endl;
-    REQUIRE(sum == 0.5*(numberOfElements * (numberOfElements + 1)));
+    REQUIRE(sum == expectedTotal);
     /////////////////////////////////////////////////////////////////////////////
     // End of your code
     /////////////////////////////////////////////////////////////////////////////
@@ -87,25 +87,39 @@ TEST_CASE( "6. MPI Triangle Number Test", "[CW2]" ) {
   /////////////////////////////////////////////////////////////////////////////
   // Start of your code
   /////////////////////////////////////////////////////////////////////////////
+  unsigned long int block_count = numberOfElements/size;
 
   // 1. Send a block of data (subsetOfArray) to all nodes (including root) in the MPI world.
-    
-    
-    MPI_Bcast((void*) subsetOfArray, 500, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+    MPI_Scatter((void*) originalArray, block_count, MPI_UNSIGNED_LONG, 
+                (void*) subsetOfArray, block_count, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+
   // 2. Sum the local array subsetOfArray
-    unsigned long int local_sum = ccmpi::SumSeries(subsetOfArray, numberOfElements);
+    unsigned long int local_sum = ccmpi::SumSeries(subsetOfArray, block_count);
     std::cout << "Thread: " << rank << " has local sum = " << local_sum << std::endl;
+  
   // 3. Send all these local sums back to root, and sum on root.
     MPI_Reduce(&local_sum, &sumBySummingEachSum,1, MPI_UNSIGNED_LONG, MPI_SUM, 0,MPI_COMM_WORLD);
+  
   // 4. Copy blocks of memory from subsetOfArray on each node into repopulatedArray.
-    std::cout << "Total Sum = " << sumBySummingEachSum << std::endl;
+    MPI_Gather((void*) subsetOfArray, block_count, MPI_UNSIGNED_LONG,
+               (void*) repopulatedArray, block_count, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+
   // 5. On root node only, check the totals
   //    in:
   //        sumBySummingEachSum
   //        sumBySummingReturnedMemory
   //    equal:expectedTotal
-  //  
-    //REQUIRE(sumBySummingEachSum == sum);
+    if (rank == 0)
+    {
+     sumBySummingReturnedMemory = ccmpi::SumSeries(repopulatedArray, numberOfElements);
+     std::cout << "sumBySummingEachSum = " << sumBySummingEachSum << "  Expected Sum = " << expectedTotal << std::endl;
+     std::cout << "sumBySummingReturnedMemory = " << sumBySummingReturnedMemory << "  Expected Sum = " << expectedTotal << std::endl;
+     REQUIRE(ccmpi::SumSeries(originalArray,numberOfElements) == expectedTotal);
+     REQUIRE(sumBySummingEachSum == expectedTotal);
+     REQUIRE(sumBySummingReturnedMemory == expectedTotal);
+    }
+
+
 
   /////////////////////////////////////////////////////////////////////////////
   // End of your code
